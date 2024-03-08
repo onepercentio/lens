@@ -6,7 +6,7 @@ import {CollectPublicationAction} from 'contracts/modules/act/collect/CollectPub
 import {CollectNFT} from 'contracts/modules/act/collect/CollectNFT.sol';
 import {ForkManagement} from 'test/helpers/ForkManagement.sol';
 import {LensHub} from 'contracts/LensHub.sol';
-import {FeeFollowModule} from 'contracts/modules/follow/FeeFollowModule.sol';
+// import {FeeFollowModule} from 'contracts/modules/follow/FeeFollowModule.sol';
 import {RevertFollowModule} from 'contracts/modules/follow/RevertFollowModule.sol';
 import {DegreesOfSeparationReferenceModule} from 'contracts/modules/reference/DegreesOfSeparationReferenceModule.sol';
 import {FollowerOnlyReferenceModule} from 'contracts/modules/reference/FollowerOnlyReferenceModule.sol';
@@ -158,17 +158,17 @@ contract ContractAddressesLoaderDeployer is Test, ForkManagement {
 
     // function loadOrDeploy_SeaDropMintPublicationAction() internal returns (address) {}
 
-    function loadOrDeploy_FeeFollowModule() internal returns (address) {
-        address feeFollowModule;
-        if (fork && keyExists(json, string(abi.encodePacked('.', forkEnv, '.FeeFollowModule')))) {
-            feeFollowModule = json.readAddress(string(abi.encodePacked('.', forkEnv, '.FeeFollowModule')));
-            console.log('Testing against already deployed module at:', feeFollowModule);
-        } else {
-            vm.prank(deployer);
-            feeFollowModule = address(new FeeFollowModule(address(hub), address(moduleRegistry), address(this)));
-        }
-        return feeFollowModule;
-    }
+    // function loadOrDeploy_FeeFollowModule() internal returns (address) {
+    //     address feeFollowModule;
+    //     if (fork && keyExists(json, string(abi.encodePacked('.', forkEnv, '.FeeFollowModule')))) {
+    //         feeFollowModule = json.readAddress(string(abi.encodePacked('.', forkEnv, '.FeeFollowModule')));
+    //         console.log('Testing against already deployed module at:', feeFollowModule);
+    //     } else {
+    //         vm.prank(deployer);
+    //         feeFollowModule = address(new FeeFollowModule(address(hub), address(moduleRegistry), address(this)));
+    //     }
+    //     return feeFollowModule;
+    // }
 
     function loadOrDeploy_RevertFollowModule() internal returns (address) {
         address revertFollowModule;

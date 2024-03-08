@@ -209,23 +209,15 @@ contract DeployCore is Script, ForkManagement {
         lensHubV2Impl = address(
             new LensHubInitializable(
                 followNFTImpl,
-                legacyCollectNFTImpl,
                 moduleRegistry,
-                PROFILE_GUARDIAN_COOLDOWN,
-                Types.MigrationParams({
-                    lensHandlesAddress: lensHandlesAddress,
-                    tokenHandleRegistryAddress: tokenHandleRegistryAddress,
-                    legacyFeeFollowModule: legacyFeeFollowModule,
-                    legacyProfileFollowModule: legacyProfileFollowModule,
-                    newFeeFollowModule: newFeeFollowModule
-                })
+                PROFILE_GUARDIAN_COOLDOWN
             )
         );
         vm.stopBroadcast();
 
         console.log('"arguments": [');
         console.log('\t"%s"', followNFTImpl);
-        console.log('\t"%s"', legacyCollectNFTImpl);
+        // console.log('\t"%s"', legacyCollectNFTImpl);
         console.log('\t"%s"', moduleRegistry);
         console.log('\t"%s"', PROFILE_GUARDIAN_COOLDOWN);
         console.log(

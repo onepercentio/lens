@@ -7,7 +7,6 @@ import {Types} from 'contracts/libraries/constants/Types.sol';
 import {Events} from 'contracts/libraries/constants/Events.sol';
 import {Errors} from 'contracts/libraries/constants/Errors.sol';
 import {IReferenceModule} from 'contracts/interfaces/IReferenceModule.sol';
-import {ILegacyReferenceModule} from 'contracts/interfaces/ILegacyReferenceModule.sol';
 import {StorageLib} from 'contracts/libraries/StorageLib.sol';
 import {IPublicationActionModule} from 'contracts/interfaces/IPublicationActionModule.sol';
 import {IModuleRegistry} from 'contracts/interfaces/IModuleRegistry.sol';
@@ -192,22 +191,7 @@ library PublicationLib {
 
     function getPublicationType(uint256 profileId, uint256 pubId) internal view returns (Types.PublicationType) {
         Types.Publication storage _publication = StorageLib.getPublication(profileId, pubId);
-        Types.PublicationType pubType = _publication.pubType;
-        if (uint8(pubType) == 0) {
-            // Legacy V1: If the publication type is 0, we check using the legacy rules.
-            if (_publication.pointedProfileId != 0) {
-                // It is pointing to a publication, so it can be either a comment or a mirror, depending on if it has a
-                // collect module or not.
-                if (_publication.__DEPRECATED__collectModule == address(0)) {
-                    return Types.PublicationType.Mirror;
-                } else {
-                    return Types.PublicationType.Comment;
-                }
-            } else if (_publication.__DEPRECATED__collectModule != address(0)) {
-                return Types.PublicationType.Post;
-            }
-        }
-        return pubType;
+        return _publication.pubType;
     }
 
     function getContentURI(uint256 profileId, uint256 pubId) external view returns (string memory) {
@@ -373,12 +357,13 @@ library PublicationLib {
                     // Deprecated reference modules don't support referrers.
                     revert Errors.InvalidReferrer();
                 }
-                ILegacyReferenceModule(refModule).processComment(
-                    commentParams.profileId,
-                    commentParams.pointedProfileId,
-                    commentParams.pointedPubId,
-                    commentParams.referenceModuleData
-                );
+                // TODO: check if the following snippet needs to be replaced
+                // ILegacyReferenceModule(refModule).processComment(
+                //     commentParams.profileId,
+                //     commentParams.pointedProfileId,
+                //     commentParams.pointedPubId,
+                //     commentParams.referenceModuleData
+                // );
             }
         } else {
             if (commentParams.referrerProfileIds.length > 0) {
@@ -428,12 +413,13 @@ library PublicationLib {
                     // Deprecated reference modules don't support referrers.
                     revert Errors.InvalidReferrer();
                 }
-                ILegacyReferenceModule(refModule).processComment(
-                    quoteParams.profileId,
-                    quoteParams.pointedProfileId,
-                    quoteParams.pointedPubId,
-                    quoteParams.referenceModuleData
-                );
+                // TODO: check if the following snippet needs to be replaced
+                // ILegacyReferenceModule(refModule).processComment(
+                //     quoteParams.profileId,
+                //     quoteParams.pointedProfileId,
+                //     quoteParams.pointedPubId,
+                //     quoteParams.referenceModuleData
+                // );
             }
         } else {
             if (quoteParams.referrerProfileIds.length > 0) {
@@ -483,12 +469,13 @@ library PublicationLib {
                     // Deprecated reference modules don't support referrers.
                     revert Errors.InvalidReferrer();
                 }
-                ILegacyReferenceModule(refModule).processMirror(
-                    mirrorParams.profileId,
-                    mirrorParams.pointedProfileId,
-                    mirrorParams.pointedPubId,
-                    mirrorParams.referenceModuleData
-                );
+                // TODO: check if the following snippet needs to be replaced
+                // ILegacyReferenceModule(refModule).processMirror(
+                //     mirrorParams.profileId,
+                //     mirrorParams.pointedProfileId,
+                //     mirrorParams.pointedPubId,
+                //     mirrorParams.referenceModuleData
+                // );
             }
         } else {
             if (mirrorParams.referrerProfileIds.length > 0) {

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {LegacyCollectNFT} from 'contracts/misc/LegacyCollectNFT.sol';
+// import {LegacyCollectNFT} from 'contracts/misc/LegacyCollectNFT.sol';
 import {FollowNFT} from 'contracts/FollowNFT.sol';
 import {LensHubInitializable} from 'contracts/misc/LensHubInitializable.sol';
 import {TransparentUpgradeableProxy} from '@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol';
@@ -62,7 +62,7 @@ contract ContractAddresses {
 
     ////////////////////////////////// Deployed addresses
     address hubProxyAddr;
-    LegacyCollectNFT legacyCollectNFT;
+    // LegacyCollectNFT legacyCollectNFT;
     FollowNFT followNFT;
     LensHubInitializable hubImpl;
     TransparentUpgradeableProxy hubAsProxy;

@@ -29,11 +29,11 @@ contract ActTest is ReferralSystemTest {
         uint256[] memory /* referrerProfileIds */,
         uint256[] memory /* referrerPubIds */
     ) internal virtual override returns (bool) {
-        if (_isV1LegacyPub(hub.getPublication(target.profileId, target.pubId))) {
-            console.log('Publication is V1 legacy, expecting a revert');
-            vm.expectRevert(Errors.ActionNotAllowed.selector);
-            return true;
-        }
+        // if (_isV1LegacyPub(hub.getPublication(target.profileId, target.pubId))) {
+        //     console.log('Publication is V1 legacy, expecting a revert');
+        //     vm.expectRevert(Errors.ActionNotAllowed.selector);
+        //     return true;
+        // }
         return false;
     }
 

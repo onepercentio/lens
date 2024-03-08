@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import 'test/base/BaseTest.t.sol';
-import {MockDeprecatedCollectModule} from 'test/mocks/MockDeprecatedCollectModule.sol';
+// import {MockDeprecatedCollectModule} from 'test/mocks/MockDeprecatedCollectModule.sol';
 
 contract LensHubEventHooksTest is BaseTest {
     TestAccount follower;
@@ -26,25 +26,11 @@ contract LensHubEventHooksTest is BaseTest {
         assertTrue(hub.isFollowing(follower.profileId, defaultAccount.profileId));
 
         /// Collect preparation:
-        MockDeprecatedCollectModule mockDeprecatedCollectModule = new MockDeprecatedCollectModule(address(this));
+        // MockDeprecatedCollectModule mockDeprecatedCollectModule = new MockDeprecatedCollectModule(address(this));
 
         // Create a V1 pub
         vm.prank(defaultAccount.owner);
         defaultPubId = hub.post(_getDefaultPostParams());
-
-        _toLegacyV1Pub(defaultAccount.profileId, defaultPubId, address(0), address(mockDeprecatedCollectModule));
-
-        Types.LegacyCollectParams memory defaultCollectParams = Types.LegacyCollectParams({
-            publicationCollectedProfileId: defaultAccount.profileId,
-            publicationCollectedId: defaultPubId,
-            collectorProfileId: defaultAccount.profileId,
-            referrerProfileId: 0,
-            referrerPubId: 0,
-            collectModuleData: abi.encode(true)
-        });
-
-        vm.prank(defaultAccount.owner);
-        hub.collectLegacy(defaultCollectParams);
     }
 
     function testCannot_EmitUnfollowedEvent_ifNotFollowNFTOfFollowedProfile(

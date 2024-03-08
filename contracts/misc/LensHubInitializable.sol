@@ -24,11 +24,9 @@ contract LensHubInitializable is LensHub, VersionedInitializable, ILensHubInitia
 
     constructor(
         address followNFTImpl,
-        address collectNFTImpl,
         address moduleRegistry,
-        uint256 tokenGuardianCooldown,
-        Types.MigrationParams memory migrationParams
-    ) LensHub(followNFTImpl, collectNFTImpl, moduleRegistry, tokenGuardianCooldown, migrationParams) {}
+        uint256 tokenGuardianCooldown
+    ) LensHub(followNFTImpl, moduleRegistry, tokenGuardianCooldown) {}
 
     /**
      * @inheritdoc ILensHubInitializable

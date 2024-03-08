@@ -20,7 +20,6 @@ import {LensVersion} from 'contracts/base/LensVersion.sol';
 
 // Libraries
 import {ActionLib} from 'contracts/libraries/ActionLib.sol';
-import {LegacyCollectLib} from 'contracts/libraries/LegacyCollectLib.sol';
 import {FollowLib} from 'contracts/libraries/FollowLib.sol';
 import {MetaTxLib} from 'contracts/libraries/MetaTxLib.sol';
 import {ProfileLib} from 'contracts/libraries/ProfileLib.sol';
@@ -29,7 +28,7 @@ import {StorageLib} from 'contracts/libraries/StorageLib.sol';
 import {ValidationLib} from 'contracts/libraries/ValidationLib.sol';
 
 // Lens Migrations V1 to V2
-import {LensV2Migration} from 'contracts/misc/LensV2Migration.sol';
+// import {LensV2Migration} from 'contracts/misc/LensV2Migration.sol';
 
 /**
  * @title LensHub
@@ -49,7 +48,7 @@ import {LensV2Migration} from 'contracts/misc/LensV2Migration.sol';
 contract LensHub is
     LensProfiles,
     LensGovernable,
-    LensV2Migration,
+    // LensV2Migration,
     LensImplGetters,
     LensHubEventHooks,
     LensHubStorage,
@@ -70,14 +69,11 @@ contract LensHub is
 
     constructor(
         address followNFTImpl,
-        address legacyCollectNFTImpl, // We still pass the deprecated CollectNFTImpl for legacy Collects to work
         address moduleRegistry,
-        uint256 tokenGuardianCooldown,
-        Types.MigrationParams memory migrationParams
+        uint256 tokenGuardianCooldown
     )
-        LensV2Migration(migrationParams)
         LensProfiles(tokenGuardianCooldown)
-        LensImplGetters(followNFTImpl, legacyCollectNFTImpl, moduleRegistry)
+        LensImplGetters(followNFTImpl, moduleRegistry)
     {}
 
     /// @inheritdoc ILensProtocol
@@ -401,45 +397,6 @@ contract LensHub is
         ProfileLib.setBlockStatus(byProfileId, idsOfProfilesToSetBlockStatus, blockStatus, signature.signer);
     }
 
-    /// @inheritdoc ILensProtocol
-    function collectLegacy(
-        Types.LegacyCollectParams calldata collectParams
-    )
-        external
-        override
-        whenNotPaused
-        onlyProfileOwnerOrDelegatedExecutor(msg.sender, collectParams.collectorProfileId)
-        returns (uint256)
-    {
-        return
-            LegacyCollectLib.collect({
-                collectParams: collectParams,
-                transactionExecutor: msg.sender,
-                collectorProfileOwner: ownerOf(collectParams.collectorProfileId),
-                collectNFTImpl: this.getLegacyCollectNFTImpl()
-            });
-    }
-
-    /// @inheritdoc ILensProtocol
-    function collectLegacyWithSig(
-        Types.LegacyCollectParams calldata collectParams,
-        Types.EIP712Signature calldata signature
-    )
-        external
-        override
-        whenNotPaused
-        onlyProfileOwnerOrDelegatedExecutor(signature.signer, collectParams.collectorProfileId)
-        returns (uint256)
-    {
-        MetaTxLib.validateLegacyCollectSignature(signature, collectParams);
-        return
-            LegacyCollectLib.collect({
-                collectParams: collectParams,
-                transactionExecutor: signature.signer,
-                collectorProfileOwner: ownerOf(collectParams.collectorProfileId),
-                collectNFTImpl: this.getLegacyCollectNFTImpl()
-            });
-    }
 
     /// @inheritdoc ILensProtocol
     function act(

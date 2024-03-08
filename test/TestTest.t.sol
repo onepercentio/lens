@@ -13,16 +13,8 @@ contract TestTest is BaseTest {
         address newLensHub = address(
             new LensHubInitializable({
                 followNFTImpl: 0x535FDf959f86E95eB95d03E112fb7CFA2Bf4fE15,
-                collectNFTImpl: 0x0000000000000000000000000000000000000000,
                 moduleRegistry: 0x8834aE494ADD3C56d274Fe88243526DBAB15dEF8,
-                tokenGuardianCooldown: 300,
-                migrationParams: Types.MigrationParams({
-                    lensHandlesAddress: address(0),
-                    tokenHandleRegistryAddress: address(0),
-                    legacyFeeFollowModule: address(0),
-                    legacyProfileFollowModule: address(0),
-                    newFeeFollowModule: address(0)
-                })
+                tokenGuardianCooldown: 300
             })
         );
 

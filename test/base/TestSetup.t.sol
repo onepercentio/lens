@@ -18,7 +18,7 @@ import {ContractAddressesLoaderDeployer} from 'test/base/ContractAddressesLoader
 import {LensHub} from 'contracts/LensHub.sol';
 import {LensHubInitializable} from 'contracts/misc/LensHubInitializable.sol';
 import {FollowNFT} from 'contracts/FollowNFT.sol';
-import {LegacyCollectNFT} from 'contracts/misc/LegacyCollectNFT.sol';
+// import {LegacyCollectNFT} from 'contracts/misc/LegacyCollectNFT.sol';
 import {TransparentUpgradeableProxy} from '@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol';
 import {LensHandles} from 'contracts/namespaces/LensHandles.sol';
 import {TokenHandleRegistry} from 'contracts/namespaces/TokenHandleRegistry.sol';
@@ -120,19 +120,19 @@ contract TestSetup is Test, ContractAddressesLoaderDeployer, ArrayHelpers {
 
         address followNFTAddr = hub.getFollowNFTImpl();
 
-        address legacyCollectNFTAddr;
-        if (lensVersion == 2) {
-            legacyCollectNFTAddr = hub.getLegacyCollectNFTImpl();
-        } else {
-            console.log('lensVersion is: %s. Trying to getCollectNFTImpl...', lensVersion);
-            legacyCollectNFTAddr = IOldHub(address(hub)).getCollectNFTImpl();
-        }
+        // address legacyCollectNFTAddr;
+        // if (lensVersion == 2) {
+        //     // legacyCollectNFTAddr = hub.getLegacyCollectNFTImpl();
+        // } else {
+        //     console.log('lensVersion is: %s. Trying to getCollectNFTImpl...', lensVersion);
+        //     legacyCollectNFTAddr = IOldHub(address(hub)).getCollectNFTImpl();
+        // }
 
         address hubImplAddr = address(uint160(uint256(vm.load(hubProxyAddr, PROXY_IMPLEMENTATION_STORAGE_SLOT))));
         console.log('Found hubImplAddr:', hubImplAddr);
         hubImpl = LensHubInitializable(hubImplAddr);
         followNFT = FollowNFT(followNFTAddr);
-        legacyCollectNFT = LegacyCollectNFT(legacyCollectNFTAddr);
+        // legacyCollectNFT = LegacyCollectNFT(legacyCollectNFTAddr);
         hubAsProxy = TransparentUpgradeableProxy(payable(address(hub)));
 
         governanceMultisig = hub.getGovernance();
@@ -225,7 +225,7 @@ contract TestSetup is Test, ContractAddressesLoaderDeployer, ArrayHelpers {
             vm.prank(governance);
             hub.whitelistProfileCreator(address(this), true);
             beforeUpgrade();
-            upgradeToV2();
+            // upgradeToV2();
         }
 
         if (forkVersion == 2) {
@@ -250,49 +250,42 @@ contract TestSetup is Test, ContractAddressesLoaderDeployer, ArrayHelpers {
         // Override to execute Lens V1 state setup.
     }
 
-    function upgradeToV2() internal virtual {
-        // Precompute needed addresses.
-        address followNFTImplAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 1);
-        address legacyCollectNFTImplAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 2);
+    // function upgradeToV2() internal virtual {
+    //     // Precompute needed addresses.
+    //     address followNFTImplAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 1);
+    //     address legacyCollectNFTImplAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 2);
 
-        vm.startPrank(deployer);
-        // Deploy implementation contracts.
-        // TODO: Last 3 addresses are for the follow modules for migration purposes.
-        hubImpl = new LensHubInitializable({ // TODO: Should we use the usual LensHub, not Initializable?
-            followNFTImpl: followNFTImplAddr,
-            collectNFTImpl: legacyCollectNFTImplAddr,
-            moduleRegistry: address(moduleRegistry),
-            tokenGuardianCooldown: PROFILE_GUARDIAN_COOLDOWN,
-            migrationParams: Types.MigrationParams({
-                lensHandlesAddress: address(lensHandles),
-                tokenHandleRegistryAddress: address(tokenHandleRegistry),
-                legacyFeeFollowModule: address(0), // TODO: Fill this in
-                legacyProfileFollowModule: address(0), // TODO: Fill this in
-                newFeeFollowModule: address(0) // TODO: Fill this in
-            })
-        });
-        followNFT = new FollowNFT(hubProxyAddr);
-        legacyCollectNFT = new LegacyCollectNFT(hubProxyAddr);
-        vm.stopPrank();
+    //     vm.startPrank(deployer);
+    //     // Deploy implementation contracts.
+    //     // TODO: Last 3 addresses are for the follow modules for migration purposes.
+    //     hubImpl = new LensHubInitializable({ // TODO: Should we use the usual LensHub, not Initializable?
+    //         followNFTImpl: followNFTImplAddr,
+    //         // collectNFTImpl: legacyCollectNFTImplAddr,
+    //         moduleRegistry: address(moduleRegistry),
+    //         tokenGuardianCooldown: PROFILE_GUARDIAN_COOLDOWN
+    //     });
+    //     followNFT = new FollowNFT(hubProxyAddr);
+    //     legacyCollectNFT = new LegacyCollectNFT(hubProxyAddr);
+    //     vm.stopPrank();
 
-        // Upgrade the hub.
-        TransparentUpgradeableProxy oldHubAsProxy = TransparentUpgradeableProxy(payable(hubProxyAddr));
-        vm.prank(proxyAdmin);
-        oldHubAsProxy.upgradeTo(address(hubImpl));
+    //     // Upgrade the hub.
+    //     TransparentUpgradeableProxy oldHubAsProxy = TransparentUpgradeableProxy(payable(hubProxyAddr));
+    //     vm.prank(proxyAdmin);
+    //     oldHubAsProxy.upgradeTo(address(hubImpl));
 
-        vm.startPrank(governance);
-        hub.setTreasury(treasury);
-        hub.setTreasuryFee(TREASURY_FEE_BPS);
-        hub.setProfileTokenURIContract(address(profileTokenURIContract));
-        hub.setFollowTokenURIContract(address(followTokenURIContract));
-        vm.stopPrank();
+    //     vm.startPrank(governance);
+    //     hub.setTreasury(treasury);
+    //     hub.setTreasuryFee(TREASURY_FEE_BPS);
+    //     hub.setProfileTokenURIContract(address(profileTokenURIContract));
+    //     hub.setFollowTokenURIContract(address(followTokenURIContract));
+    //     vm.stopPrank();
 
-        vm.startPrank(lensHandles.OWNER());
-        lensHandles.setHandleTokenURIContract(address(handleTokenURIContract));
-        vm.stopPrank();
+    //     vm.startPrank(lensHandles.OWNER());
+    //     lensHandles.setHandleTokenURIContract(address(handleTokenURIContract));
+    //     vm.stopPrank();
 
-        lensVersion = 2;
-    }
+    //     lensVersion = 2;
+    // }
 
     function deployBaseContracts() internal {
         deployer = _loadAddressAs('DEPLOYER');
@@ -303,10 +296,10 @@ contract TestSetup is Test, ContractAddressesLoaderDeployer, ArrayHelpers {
 
         TREASURY_FEE_BPS = 50;
 
-        ///////////////////////////////////////// Start deployments.
+        // ///////////////////////////////////////// Start deployments.
         vm.startPrank(deployer);
 
-        // Deploy ModuleRegistry implementation and proxy.
+        // // Deploy ModuleRegistry implementation and proxy.
         address moduleRegistryImpl = address(new ModuleRegistry());
         vm.label(moduleRegistryImpl, 'MODULE_REGISTRY_IMPL');
 
@@ -315,32 +308,24 @@ contract TestSetup is Test, ContractAddressesLoaderDeployer, ArrayHelpers {
 
         // Precompute needed addresses.
         address followNFTImplAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 1);
-        address legacyCollectNFTImplAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 2);
-        hubProxyAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 3);
-        address lensHandlesImplAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 4);
-        address lensHandlesProxyAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 5);
-        address tokenHandleRegistryImplAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 6);
-        address tokenHandleRegistryProxyAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 7);
+        // address legacyCollectNFTImplAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 2);
+        hubProxyAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 2);
+        address lensHandlesImplAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 3);
+        address lensHandlesProxyAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 4);
+        address tokenHandleRegistryImplAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 5);
+        address tokenHandleRegistryProxyAddr = computeCreateAddress(deployer, vm.getNonce(deployer) + 6);
 
         // Deploy implementation contracts.
         // TODO: Last 3 addresses are for the follow modules for migration purposes.
         hubImpl = new LensHubInitializable({
             followNFTImpl: followNFTImplAddr,
-            collectNFTImpl: legacyCollectNFTImplAddr,
             moduleRegistry: address(moduleRegistry),
-            tokenGuardianCooldown: PROFILE_GUARDIAN_COOLDOWN,
-            migrationParams: Types.MigrationParams({
-                lensHandlesAddress: lensHandlesProxyAddr,
-                tokenHandleRegistryAddress: tokenHandleRegistryProxyAddr,
-                legacyFeeFollowModule: address(0),
-                legacyProfileFollowModule: address(0),
-                newFeeFollowModule: address(0)
-            })
+            tokenGuardianCooldown: PROFILE_GUARDIAN_COOLDOWN
         });
         followNFT = new FollowNFT(hubProxyAddr);
-        legacyCollectNFT = new LegacyCollectNFT(hubProxyAddr);
+        // legacyCollectNFT = new LegacyCollectNFT(hubProxyAddr);
 
-        // Deploy and initialize proxy.
+        // // Deploy and initialize proxy.
         bytes memory initData = abi.encodeCall(
             hubImpl.initialize,
             ('Lens Protocol Profiles', 'LPP', governanceMultisig) // TODO: Replace this with GovernanceContract
