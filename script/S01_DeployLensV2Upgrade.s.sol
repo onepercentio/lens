@@ -10,14 +10,14 @@ import {FollowNFT} from 'contracts/FollowNFT.sol';
 import {LensHandles} from 'contracts/namespaces/LensHandles.sol';
 import {TokenHandleRegistry} from 'contracts/namespaces/TokenHandleRegistry.sol';
 import {TransparentUpgradeableProxy} from '@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol';
-import {FeeFollowModule} from 'contracts/modules/follow/FeeFollowModule.sol';
+// import {FeeFollowModule} from 'contracts/modules/follow/FeeFollowModule.sol';
 import {Governance} from 'contracts/misc/access/Governance.sol';
 import {LensV2UpgradeContract} from 'contracts/misc/LensV2UpgradeContract.sol';
 import {ProxyAdmin} from 'contracts/misc/access/ProxyAdmin.sol';
 import {ModuleRegistry} from 'contracts/misc/ModuleRegistry.sol';
 import {Types} from 'contracts/libraries/constants/Types.sol';
 import {LibString} from 'solady/utils/LibString.sol';
-import {LegacyCollectNFT} from 'contracts/misc/LegacyCollectNFT.sol';
+// import {LegacyCollectNFT} from 'contracts/misc/LegacyCollectNFT.sol';
 
 import {ArrayHelpers} from 'script/helpers/ArrayHelpers.sol';
 
@@ -51,14 +51,14 @@ contract S01_DeployLensV2Upgrade is Script, ForkManagement, ArrayHelpers {
     ILensGovernable moduleGlobals; // We use `getTreasury` and `getTreasuryFee` functions
 
     address followNFTImpl;
-    address legacyCollectNFTImpl;
+    // address legacyCollectNFTImpl;
     address lensHandlesImpl;
     address lensHandles;
     address tokenHandleRegistryImpl;
     address tokenHandleRegistry;
-    address legacyFeeFollowModule;
-    address legacyProfileFollowModule;
-    address feeFollowModule;
+    // address legacyFeeFollowModule;
+    // address legacyProfileFollowModule;
+    // address feeFollowModule;
     address moduleRegistryImpl;
     address moduleRegistry;
 
@@ -78,13 +78,13 @@ contract S01_DeployLensV2Upgrade is Script, ForkManagement, ArrayHelpers {
 
     function loadBaseAddresses() internal override {
         lensHub = json.readAddress(string(abi.encodePacked('.', targetEnv, '.LensHubProxy')));
-        legacyLensHub = ILensGovernable(lensHub);
-        vm.label(lensHub, 'LensHub');
-        console.log('Lens Hub Proxy: %s', address(legacyLensHub));
+        // legacyLensHub = ILensGovernable(lensHub);
+        // vm.label(lensHub, 'LensHub');
+        // console.log('Lens Hub Proxy: %s', address(legacyLensHub));
 
-        legacyLensHubImpl = address(uint160(uint256(vm.load(lensHub, PROXY_IMPLEMENTATION_STORAGE_SLOT))));
-        vm.label(legacyLensHubImpl, 'LensHubImplementation');
-        console.log('Legacy Lens Hub Impl: %s', address(legacyLensHubImpl));
+        // legacyLensHubImpl = address(uint160(uint256(vm.load(lensHub, PROXY_IMPLEMENTATION_STORAGE_SLOT))));
+        // vm.label(legacyLensHubImpl, 'LensHubImplementation');
+        // console.log('Legacy Lens Hub Impl: %s', address(legacyLensHubImpl));
 
         moduleGlobals = ILensGovernable(json.readAddress(string(abi.encodePacked('.', targetEnv, '.ModuleGlobals'))));
         vm.label(address(moduleGlobals), 'ModuleGlobals');
@@ -95,13 +95,13 @@ contract S01_DeployLensV2Upgrade is Script, ForkManagement, ArrayHelpers {
             (Module[])
         );
 
-        legacyFeeFollowModule = findModuleHelper(followModules, 'FeeFollowModule').addy;
-        vm.label(legacyFeeFollowModule, 'LegacyFeeFollowModule');
-        console.log('Legacy Fee Follow Module: %s', legacyFeeFollowModule);
+        // legacyFeeFollowModule = findModuleHelper(followModules, 'FeeFollowModule').addy;
+        // vm.label(legacyFeeFollowModule, 'LegacyFeeFollowModule');
+        // console.log('Legacy Fee Follow Module: %s', legacyFeeFollowModule);
 
-        legacyProfileFollowModule = findModuleHelper(followModules, 'ProfileFollowModule').addy;
-        vm.label(legacyProfileFollowModule, 'LegacyProfileFollowModule');
-        console.log('Legacy Profile Follow Module: %s', legacyProfileFollowModule);
+        // legacyProfileFollowModule = findModuleHelper(followModules, 'ProfileFollowModule').addy;
+        // vm.label(legacyProfileFollowModule, 'LegacyProfileFollowModule');
+        // console.log('Legacy Profile Follow Module: %s', legacyProfileFollowModule);
 
         console.log('\n');
 
@@ -219,10 +219,10 @@ contract S01_DeployLensV2Upgrade is Script, ForkManagement, ArrayHelpers {
         vm.startBroadcast(_deployer.ownerPk);
 
         // Deploy LegacyCollectNFTImpl
-        legacyCollectNFTImpl = address(new LegacyCollectNFT(lensHub));
-        vm.label(legacyCollectNFTImpl, 'LegacyCollectNFTImpl');
-        saveContractAddress('LegacyCollectNFTImpl', legacyCollectNFTImpl);
-        console.log('Legacy CollectNFTImpl: %s', legacyCollectNFTImpl);
+        // legacyCollectNFTImpl = address(new LegacyCollectNFT(lensHub));
+        // vm.label(legacyCollectNFTImpl, 'LegacyCollectNFTImpl');
+        // saveContractAddress('LegacyCollectNFTImpl', legacyCollectNFTImpl);
+        // console.log('Legacy CollectNFTImpl: %s', legacyCollectNFTImpl);
 
         // Deploy FollowNFTImpl(hub)
         followNFTImpl = address(new FollowNFT(lensHub));
@@ -274,25 +274,17 @@ contract S01_DeployLensV2Upgrade is Script, ForkManagement, ArrayHelpers {
         }
 
         // Deploy new FeeFollowModule(hub, moduleRegistry)
-        feeFollowModule = address(new FeeFollowModule(lensHub, moduleRegistry, governance));
-        vm.writeLine(addressesFile, string.concat('FeeFollowModule: ', vm.toString(feeFollowModule)));
-        saveModule('FeeFollowModule', address(feeFollowModule), 'v2', 'follow');
-        console.log('FeeFollowModule: %s', feeFollowModule);
+        // feeFollowModule = address(new FeeFollowModule(lensHub, moduleRegistry, governance));
+        // vm.writeLine(addressesFile, string.concat('FeeFollowModule: ', vm.toString(feeFollowModule)));
+        // saveModule('FeeFollowModule', address(feeFollowModule), 'v2', 'follow');
+        // console.log('FeeFollowModule: %s', feeFollowModule);
 
         // Pass all the fucking shit and deploy LensHub V2 Impl with:
         lensHubV2Impl = address(
             new LensHubInitializable(
                 followNFTImpl,
-                legacyCollectNFTImpl,
                 moduleRegistry,
-                PROFILE_GUARDIAN_COOLDOWN,
-                Types.MigrationParams({
-                    lensHandlesAddress: lensHandles,
-                    tokenHandleRegistryAddress: tokenHandleRegistry,
-                    legacyFeeFollowModule: legacyFeeFollowModule,
-                    legacyProfileFollowModule: legacyProfileFollowModule,
-                    newFeeFollowModule: feeFollowModule
-                })
+                PROFILE_GUARDIAN_COOLDOWN
             )
         );
 
@@ -305,7 +297,7 @@ contract S01_DeployLensV2Upgrade is Script, ForkManagement, ArrayHelpers {
         //   ],
         console.log('"arguments": [');
         console.log('\t"%s"', followNFTImpl);
-        console.log('\t"%s"', legacyCollectNFTImpl);
+        // console.log('\t"%s"', legacyCollectNFTImpl);
         console.log('\t"%s"', moduleRegistry);
         console.log('\t"%s"', PROFILE_GUARDIAN_COOLDOWN);
         console.log(
@@ -315,12 +307,12 @@ contract S01_DeployLensV2Upgrade is Script, ForkManagement, ArrayHelpers {
                 vm.toString(lensHandles),
                 ', ',
                 vm.toString(tokenHandleRegistry),
-                ', ',
-                vm.toString(legacyFeeFollowModule),
-                ', ',
-                vm.toString(legacyProfileFollowModule),
-                ', ',
-                vm.toString(feeFollowModule),
+                // ', ',
+                // vm.toString(legacyFeeFollowModule),
+                // ', ',
+                // vm.toString(legacyProfileFollowModule),
+                // ', ',
+                // vm.toString(feeFollowModule),
                 ')'
             )
         );

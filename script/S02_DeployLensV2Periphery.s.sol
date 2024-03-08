@@ -17,15 +17,15 @@ import {ITokenHandleRegistry} from 'contracts/interfaces/ITokenHandleRegistry.so
 import {ProfileCreationProxy} from 'contracts/misc/ProfileCreationProxy.sol';
 import {CollectNFT} from 'contracts/modules/act/collect/CollectNFT.sol';
 import {CollectPublicationAction} from 'contracts/modules/act/collect/CollectPublicationAction.sol';
-import {SimpleFeeCollectModule} from 'contracts/modules/act/collect/SimpleFeeCollectModule.sol';
-import {MultirecipientFeeCollectModule} from 'contracts/modules/act/collect/MultirecipientFeeCollectModule.sol';
+// import {SimpleFeeCollectModule} from 'contracts/modules/act/collect/SimpleFeeCollectModule.sol';
+// import {MultirecipientFeeCollectModule} from 'contracts/modules/act/collect/MultirecipientFeeCollectModule.sol';
 import {RevertFollowModule} from 'contracts/modules/follow/RevertFollowModule.sol';
 import {DegreesOfSeparationReferenceModule} from 'contracts/modules/reference/DegreesOfSeparationReferenceModule.sol';
 import {FollowerOnlyReferenceModule} from 'contracts/modules/reference/FollowerOnlyReferenceModule.sol';
 import {TokenGatedReferenceModule} from 'contracts/modules/reference/TokenGatedReferenceModule.sol';
 import {ModuleRegistry} from 'contracts/misc/ModuleRegistry.sol';
 import {Governance} from 'contracts/misc/access/Governance.sol';
-import {PublicActProxy} from 'contracts/misc/PublicActProxy.sol';
+// import {PublicActProxy} from 'contracts/misc/PublicActProxy.sol';
 import {LitAccessControl} from 'contracts/misc/access/LitAccessControl.sol';
 import {LibString} from 'solady/utils/LibString.sol';
 
@@ -75,13 +75,13 @@ contract S02_DeployLensV2Periphery is Script, ForkManagement, ArrayHelpers {
     CollectPublicationAction collectPublicationActionImpl;
     TransparentUpgradeableProxy collectPublicationActionProxy;
     CollectPublicationAction collectPublicationAction;
-    SimpleFeeCollectModule simpleFeeCollectModule;
-    MultirecipientFeeCollectModule multirecipientFeeCollectModule;
+    // SimpleFeeCollectModule simpleFeeCollectModule;
+    // MultirecipientFeeCollectModule multirecipientFeeCollectModule;
     RevertFollowModule revertFollowModule;
     DegreesOfSeparationReferenceModule degreesOfSeparationReferenceModule;
     FollowerOnlyReferenceModule followerOnlyReferenceModule;
     TokenGatedReferenceModule tokenGatedReferenceModule;
-    PublicActProxy publicActProxy;
+    // PublicActProxy publicActProxy;
     address litAccessControl;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -230,14 +230,14 @@ contract S02_DeployLensV2Periphery is Script, ForkManagement, ArrayHelpers {
         vm.label(address(profileCreationProxy), 'ProfileCreationProxy');
         saveContractAddress('ProfileCreationProxy', address(profileCreationProxy));
 
-        publicActProxy = new PublicActProxy({
-            lensHub: address(hub),
-            collectPublicationAction: address(collectPublicationAction)
-        });
-        console.log('\n+ + + PublicActProxy: %s', address(publicActProxy));
-        vm.writeLine(addressesFile, string.concat('PublicActProxy: ', vm.toString(address(publicActProxy))));
-        vm.label(address(publicActProxy), 'PublicActProxy');
-        saveContractAddress('PublicActProxy', address(publicActProxy));
+        // publicActProxy = new PublicActProxy({
+        //     lensHub: address(hub),
+        //     collectPublicationAction: address(collectPublicationAction)
+        // });
+        // console.log('\n+ + + PublicActProxy: %s', address(publicActProxy));
+        // vm.writeLine(addressesFile, string.concat('PublicActProxy: ', vm.toString(address(publicActProxy))));
+        // vm.label(address(publicActProxy), 'PublicActProxy');
+        // saveContractAddress('PublicActProxy', address(publicActProxy));
 
         uint256 currentDeployerNonce = vm.getNonce(deployer.owner);
         /**
@@ -291,33 +291,33 @@ contract S02_DeployLensV2Periphery is Script, ForkManagement, ArrayHelpers {
 
         collectPublicationAction = CollectPublicationAction(address(collectPublicationActionProxy));
 
-        simpleFeeCollectModule = new SimpleFeeCollectModule({
-            hub: address(hub),
-            actionModule: address(collectPublicationActionProxy),
-            moduleRegistry: address(moduleRegistry),
-            moduleOwner: governanceContractAdmin
-        });
-        console.log('\n+ + + SimpleFeeCollectModule: %s', address(simpleFeeCollectModule));
-        vm.writeLine(
-            addressesFile,
-            string.concat('SimpleFeeCollectModule: ', vm.toString(address(simpleFeeCollectModule)))
-        );
-        vm.label(address(simpleFeeCollectModule), 'SimpleFeeCollectModule');
-        saveModule('SimpleFeeCollectModule', address(simpleFeeCollectModule), 'v2', 'collect');
+        // simpleFeeCollectModule = new SimpleFeeCollectModule({
+        //     hub: address(hub),
+        //     actionModule: address(collectPublicationActionProxy),
+        //     moduleRegistry: address(moduleRegistry),
+        //     moduleOwner: governanceContractAdmin
+        // });
+        // console.log('\n+ + + SimpleFeeCollectModule: %s', address(simpleFeeCollectModule));
+        // vm.writeLine(
+        //     addressesFile,
+        //     string.concat('SimpleFeeCollectModule: ', vm.toString(address(simpleFeeCollectModule)))
+        // );
+        // vm.label(address(simpleFeeCollectModule), 'SimpleFeeCollectModule');
+        // saveModule('SimpleFeeCollectModule', address(simpleFeeCollectModule), 'v2', 'collect');
 
-        multirecipientFeeCollectModule = new MultirecipientFeeCollectModule({
-            hub: address(hub),
-            actionModule: address(collectPublicationActionProxy),
-            moduleRegistry: address(moduleRegistry),
-            moduleOwner: governanceContractAdmin
-        });
-        console.log('\n+ + + MultirecipientFeeCollectModule: %s', address(multirecipientFeeCollectModule));
-        vm.writeLine(
-            addressesFile,
-            string.concat('MultirecipientFeeCollectModule: ', vm.toString(address(multirecipientFeeCollectModule)))
-        );
-        vm.label(address(multirecipientFeeCollectModule), 'MultirecipientFeeCollectModule');
-        saveModule('MultirecipientFeeCollectModule', address(multirecipientFeeCollectModule), 'v2', 'collect');
+        // multirecipientFeeCollectModule = new MultirecipientFeeCollectModule({
+        //     hub: address(hub),
+        //     actionModule: address(collectPublicationActionProxy),
+        //     moduleRegistry: address(moduleRegistry),
+        //     moduleOwner: governanceContractAdmin
+        // });
+        // console.log('\n+ + + MultirecipientFeeCollectModule: %s', address(multirecipientFeeCollectModule));
+        // vm.writeLine(
+        //     addressesFile,
+        //     string.concat('MultirecipientFeeCollectModule: ', vm.toString(address(multirecipientFeeCollectModule)))
+        // );
+        // vm.label(address(multirecipientFeeCollectModule), 'MultirecipientFeeCollectModule');
+        // saveModule('MultirecipientFeeCollectModule', address(multirecipientFeeCollectModule), 'v2', 'collect');
 
         revertFollowModule = new RevertFollowModule(governanceContractAdmin);
         console.log('\n+ + + RevertFollowModule: %s', address(revertFollowModule));
@@ -403,17 +403,17 @@ contract S02_DeployLensV2Periphery is Script, ForkManagement, ArrayHelpers {
         vm.writeLine(backendEnv, '## ModuleGlobals');
         vm.writeLine(backendEnv, string.concat('GLOBAL_MODULE=', vm.toString(address(moduleRegistry))));
         vm.writeLine(backendEnv, '# v2 modules');
-        vm.writeLine(
-            backendEnv,
-            string.concat(
-                'MULTIRECIPIENT_FEE_COLLECT_OPEN_ACTION_MODULE=',
-                vm.toString(address(multirecipientFeeCollectModule))
-            )
-        );
-        vm.writeLine(
-            backendEnv,
-            string.concat('SIMPLE_COLLECT_OPEN_ACTION_MODULE=', vm.toString(address(simpleFeeCollectModule)))
-        );
+        // vm.writeLine(
+        //     backendEnv,
+        //     string.concat(
+        //         'MULTIRECIPIENT_FEE_COLLECT_OPEN_ACTION_MODULE=',
+        //         vm.toString(address(multirecipientFeeCollectModule))
+        //     )
+        // );
+        // vm.writeLine(
+        //     backendEnv,
+        //     string.concat('SIMPLE_COLLECT_OPEN_ACTION_MODULE=', vm.toString(address(simpleFeeCollectModule)))
+        // );
         vm.writeLine(backendEnv, '### follow modules');
         vm.writeLine(backendEnv, string.concat('REVERT_FOLLOW_MODULE=', vm.toString(address(revertFollowModule))));
         vm.writeLine(backendEnv, '## REFERENCE MODULES');

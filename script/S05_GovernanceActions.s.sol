@@ -17,8 +17,8 @@ import {ITokenHandleRegistry} from 'contracts/interfaces/ITokenHandleRegistry.so
 import {ProfileCreationProxy} from 'contracts/misc/ProfileCreationProxy.sol';
 import {CollectNFT} from 'contracts/modules/act/collect/CollectNFT.sol';
 import {CollectPublicationAction} from 'contracts/modules/act/collect/CollectPublicationAction.sol';
-import {SimpleFeeCollectModule} from 'contracts/modules/act/collect/SimpleFeeCollectModule.sol';
-import {MultirecipientFeeCollectModule} from 'contracts/modules/act/collect/MultirecipientFeeCollectModule.sol';
+// import {SimpleFeeCollectModule} from 'contracts/modules/act/collect/SimpleFeeCollectModule.sol';
+// import {MultirecipientFeeCollectModule} from 'contracts/modules/act/collect/MultirecipientFeeCollectModule.sol';
 import {RevertFollowModule} from 'contracts/modules/follow/RevertFollowModule.sol';
 import {DegreesOfSeparationReferenceModule} from 'contracts/modules/reference/DegreesOfSeparationReferenceModule.sol';
 import {FollowerOnlyReferenceModule} from 'contracts/modules/reference/FollowerOnlyReferenceModule.sol';
@@ -27,7 +27,7 @@ import {Types} from 'contracts/libraries/constants/Types.sol';
 import {ModuleRegistry} from 'contracts/misc/ModuleRegistry.sol';
 import {IModuleRegistry} from 'contracts/interfaces/IModuleRegistry.sol';
 import {Governance} from 'contracts/misc/access/Governance.sol';
-import {PublicActProxy} from 'contracts/misc/PublicActProxy.sol';
+// import {PublicActProxy} from 'contracts/misc/PublicActProxy.sol';
 import {LitAccessControl} from 'contracts/misc/access/LitAccessControl.sol';
 import {LibString} from 'solady/utils/LibString.sol';
 
@@ -80,14 +80,14 @@ contract S05_GovernanceActions is Script, ForkManagement, ArrayHelpers {
     ProfileCreationProxy profileCreationProxy;
     CollectNFT collectNFT;
     address collectPublicationAction;
-    address simpleFeeCollectModule;
-    address multirecipientFeeCollectModule;
-    address feeFollowModule;
+    // address simpleFeeCollectModule;
+    // address multirecipientFeeCollectModule;
+    // address feeFollowModule;
     address revertFollowModule;
     address degreesOfSeparationReferenceModule;
     address followerOnlyReferenceModule;
     address tokenGatedReferenceModule;
-    PublicActProxy publicActProxy;
+    // PublicActProxy publicActProxy;
     address litAccessControl;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -177,9 +177,9 @@ contract S05_GovernanceActions is Script, ForkManagement, ArrayHelpers {
             (Module[])
         );
 
-        feeFollowModule = findModuleHelper(followModules, 'FeeFollowModule').addy;
-        vm.label(feeFollowModule, 'FeeFollowModule');
-        console.log('FeeFollowModule: %s', feeFollowModule);
+        // feeFollowModule = findModuleHelper(followModules, 'FeeFollowModule').addy;
+        // vm.label(feeFollowModule, 'FeeFollowModule');
+        // console.log('FeeFollowModule: %s', feeFollowModule);
 
         revertFollowModule = findModuleHelper(followModules, 'RevertFollowModule').addy;
         vm.label(revertFollowModule, 'RevertFollowModule');
@@ -213,13 +213,13 @@ contract S05_GovernanceActions is Script, ForkManagement, ArrayHelpers {
             (Module[])
         );
 
-        simpleFeeCollectModule = findModuleHelper(collectModules, 'SimpleFeeCollectModule').addy;
-        vm.label(simpleFeeCollectModule, 'SimpleFeeCollectModule');
-        console.log('SimpleFeeCollectModule: %s', simpleFeeCollectModule);
+        // simpleFeeCollectModule = findModuleHelper(collectModules, 'SimpleFeeCollectModule').addy;
+        // vm.label(simpleFeeCollectModule, 'SimpleFeeCollectModule');
+        // console.log('SimpleFeeCollectModule: %s', simpleFeeCollectModule);
 
-        multirecipientFeeCollectModule = findModuleHelper(collectModules, 'MultirecipientFeeCollectModule').addy;
-        vm.label(multirecipientFeeCollectModule, 'MultirecipientFeeCollectModule');
-        console.log('MultirecipientFeeCollectModule: %s', multirecipientFeeCollectModule);
+        // multirecipientFeeCollectModule = findModuleHelper(collectModules, 'MultirecipientFeeCollectModule').addy;
+        // vm.label(multirecipientFeeCollectModule, 'MultirecipientFeeCollectModule');
+        // console.log('MultirecipientFeeCollectModule: %s', multirecipientFeeCollectModule);
 
         address governanceContractAdmin = json.readAddress(
             string(abi.encodePacked('.', targetEnv, '.GovernanceContractAdmin'))
@@ -342,8 +342,8 @@ contract S05_GovernanceActions is Script, ForkManagement, ArrayHelpers {
         vm.startBroadcast(deployer.ownerPk);
 
         // Follow modules
-        moduleRegistry.registerModule(address(feeFollowModule), uint256(IModuleRegistry.ModuleType.FOLLOW_MODULE));
-        console.log('\n* * * FeeFollowModule registered as follow module');
+        // moduleRegistry.registerModule(address(feeFollowModule), uint256(IModuleRegistry.ModuleType.FOLLOW_MODULE));
+        // console.log('\n* * * FeeFollowModule registered as follow module');
 
         moduleRegistry.registerModule(address(revertFollowModule), uint256(IModuleRegistry.ModuleType.FOLLOW_MODULE));
         console.log('\n* * * RevertFollowModule registered as follow module');
@@ -368,13 +368,13 @@ contract S05_GovernanceActions is Script, ForkManagement, ArrayHelpers {
         );
         console.log('\n* * * CollectPublicationAction registered as action module');
 
-        CollectPublicationAction(collectPublicationAction).registerCollectModule(address(simpleFeeCollectModule));
-        console.log('\n* * * SimpleFeeCollectModule registered as collect module');
+        // CollectPublicationAction(collectPublicationAction).registerCollectModule(address(simpleFeeCollectModule));
+        // console.log('\n* * * SimpleFeeCollectModule registered as collect module');
 
-        CollectPublicationAction(collectPublicationAction).registerCollectModule(
-            address(multirecipientFeeCollectModule)
-        );
-        console.log('\n* * * MultirecipientFeeCollectModule registered as collect module');
+        // CollectPublicationAction(collectPublicationAction).registerCollectModule(
+        //     address(multirecipientFeeCollectModule)
+        // );
+        // console.log('\n* * * MultirecipientFeeCollectModule registered as collect module');
 
         vm.stopBroadcast();
     }
